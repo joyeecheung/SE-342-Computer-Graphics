@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#if defined(_WIN32) || defined(WIN32)
 #include <windows.h> 
+#endif
+
 #include <GL/glut.h>
 
 
