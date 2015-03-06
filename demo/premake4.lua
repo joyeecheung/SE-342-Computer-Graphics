@@ -9,7 +9,12 @@ solution "Solution"
       files { "main.cpp" }
 
       configuration { "windows" }
-        links { "FreeGLUT", "glu32", "opengl32", "winmm" }
+        -- for freeglut
+        -- links { "FreeGLUT", "glu32", "opengl32"}
+
+        -- for GLUT
+        defines { "GLUT_DISABLE_ATEXIT_HACK" }
+        links { "glut32", "glu32", "opengl32"}
 
       configuration { "macosx" }
         linkoptions { "-framework OpenGL -framework GLUT" }
