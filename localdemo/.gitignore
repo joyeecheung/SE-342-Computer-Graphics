@@ -2,3 +2,10 @@ obj
 *.make
 *.exe
 *~
+*.sln
+*vcxproj*
+*.suo
+*sdf
+*.idb
+*.ilk
+*.pdb
