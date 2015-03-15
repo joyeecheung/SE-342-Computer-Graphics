@@ -1,18 +1,25 @@
+CC=g++
+
 ifeq ($(OS),Windows_NT)
-#LDFLAGS=-lopengl32 -lglu32 -lglut32 
-LDFLAGS=-lfreeglut -lopengl32 -Wl,--subsystem,windows
-EXECUTABLE=main.exe
+    #LDFLAGS=-lopengl32 -lglu32 -lglut32
+    LDFLAGS=-lFreeGLUT -lglu32 -lopengl32
+    EXECUTABLE=main.exe
 else
-LDFLAGS=-lGL -lglut
-EXECUTABLE=main
+    LDFLAGS=-lGL -lGLU -lglut
+    EXECUTABLE=main
 endif
 
 #CFLAGS=-g -DDEBUG -DGLUT_DISABLE_ATEXIT_HACK
 CFLAGS=-g -DDEBUG
+OBJ=main.o
 
-all:
-	g++ main.cpp -c -o main.o $(CFLAGS) 
-	g++ main.o $(LDFLAGS) -o $(EXECUTABLE) 
+all: $(EXECUTABLE)
+
+%.o: %.cpp
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(EXECUTABLE): $(OBJ)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 clean:
-	rm main.o $(EXECUTABLE) 
+	rm $(OBJ) $(EXECUTABLE)

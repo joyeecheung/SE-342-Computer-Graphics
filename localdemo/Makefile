@@ -20,8 +20,6 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = teapot.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-MAIN=src/teapot.cpp
-
 all: $(EXECUTABLE)
 
 $(ODIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
