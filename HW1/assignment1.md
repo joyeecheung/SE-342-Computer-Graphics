@@ -51,4 +51,8 @@ Since the windowing, audio, and I/O in the browser are specified in web standard
 **Metal** is a low-level API for hardware-accelerated graphics. It is designed for Apple's System on Chip(Soc) and can provide better performance for these chips.
 
 ## Comparison of OpenGL, DirectX, and Metal
-
+|          | OpenGL | DirectX | Metal |
+|----------|--------|---------|--------|
+| Platform | Cross-platform  | Microsoft products | Apple products |
+| Level of abstraction | Middle-level  | Middle-level | Low-level |
+| Functionality | 2D/3D graphics  | 2D/3D graphics, audio, video, etc. | Hardware-accelerated graphics |
