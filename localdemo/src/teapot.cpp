@@ -239,7 +239,7 @@ void renderBitmapString(float x, float y, float z,
 int main(int argc, char **argv) {
     printf("simpleGLUT\n\n");
     printf("keys:\n");
-    printf("f\t- toggle fullscreen\n");
+    printf("\tf - toggle fullscreen\n");
     printf("\tesc\t- exit\n\n");
 
     printf("mouse:\n");

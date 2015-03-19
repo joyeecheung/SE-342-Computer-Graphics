@@ -14,7 +14,7 @@ solution "demo"
         links { "FreeGLUT", "glu32", "opengl32"}
 
       configuration { "macosx" }
-        linkoptions { "-framework OpenGL -framework GLUT" }
+        linkoptions { "-framework Carbon -framework OpenGL -framework GLUT" }
 
       configuration { "not windows", "not macosx" }
         links { "X11", "GL", "GLU", "GLUT" }
