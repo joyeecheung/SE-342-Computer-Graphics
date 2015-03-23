@@ -8,9 +8,15 @@ void display(void) {
 
     // start specifying an triangle
     glBegin(GL_TRIANGLES);
-    for (int i = 0; i < 3; ++i) {
-        glVertex3f(Triangle[i][0], Triangle[i][1], Triangle[i][2]);
+    for (int i = 0; i < numTriangles; ++i) {
+        for (int v = 0; v < 3; ++v) {
+            glVertex3f(triangles[i][v][X],
+                       triangles[i][v][Y],
+                       triangles[i][v][Z]);
+        }
     }
+
+    glColor3f(BLUE_R, BLUE_G, BLUE_B);
     glEnd();
 
     // display it
