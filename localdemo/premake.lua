@@ -7,11 +7,11 @@ solution "demo"
       kind "ConsoleApp"
       language "C++"
       files { "src/*.cpp" }
-      libdirs { "lib" }
-      includedirs { "include" }
 
       configuration { "windows" }
         links { "FreeGLUT", "glu32", "opengl32"}
+        libdirs { "lib" }
+        includedirs { "include" }
 
       configuration { "macosx" }
         linkoptions { "-framework Carbon -framework OpenGL -framework GLUT" }

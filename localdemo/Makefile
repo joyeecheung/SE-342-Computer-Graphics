@@ -14,15 +14,12 @@ else
     EXECUTABLE=main
 endif
 
-_DEPS = teapot.h
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
-
 _OBJ = teapot.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 all: $(EXECUTABLE)
 
-$(ODIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
+$(ODIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(EXECUTABLE): $(OBJ)
