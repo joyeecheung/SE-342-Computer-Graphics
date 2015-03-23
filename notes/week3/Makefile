@@ -14,15 +14,18 @@ else
     EXECUTABLE=main
 endif
 
-_OBJ = main.o
-OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+_DEPS=Shape.o
+DEPS=$(patsubst %,$(ODIR)/%,$(_DEPS))
+
+_OBJ=main.o
+OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
 all: $(EXECUTABLE)
 
-$(ODIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.h
+$(ODIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(EXECUTABLE): $(OBJ)
+$(EXECUTABLE): $(OBJ) $(DEPS)
 	$(CC) -o $@ $^ $(LIBS)
 
 .PHONY: clean

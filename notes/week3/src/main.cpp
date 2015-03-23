@@ -1,54 +1,14 @@
-#include "main.h"
+#include "Shape.h"
 
-void drawPoints(int x0, int y0, int x, int y) {
-    glVertex2i( x + x0,  y + y0);
-    glVertex2i( y + x0,  x + y0);
-    glVertex2i(-x + x0,  y + y0);
-    glVertex2i(-y + x0,  x + y0);
-    glVertex2i(-x + x0, -y + y0);
-    glVertex2i(-y + x0, -x + y0);
-    glVertex2i( x + x0, -y + y0);
-    glVertex2i( y + x0, -x + y0);
-}
+Shape toDraw = TRIANGLES;
 
-void drawCircle(int x0, int y0, int r) {
-    int x = r, y = 0;
-    int err = 1 - x;
-
-    glColor4f(0.5, 0.3, 1.0, 1.0);
-
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex2i(x0, y0);
-
-    while (x >= y)
-    {
-        drawPoints(x0, y0, x, y);
-        y++;
-        if (err < 0) {
-            err += 2 * y + 1;
-        } else {
-            x--;
-            err += 2 * (y - x) + 1;
-        }
-    }
-    glEnd();
-}
-
-void drawTriangles(void) {
-    // start specifying triangles
-    glBegin(GL_TRIANGLES);
-    for (int i = 0; i < numTriangles; ++i) {
-        // specify vertex
-        for (int v = 0; v < 3; ++v) {
-            glVertex3f(triangles[i][v][X],
-                       triangles[i][v][Y],
-                       triangles[i][v][Z]);
-        }
-        // specify color
-        glColor4f(colors[i][R], colors[i][G],
-                  colors[i][B], colors[i][A]);
-    }
-    glEnd();
+void reshape(int w, int h) {
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, (GLfloat)w, 0, (GLfloat)h);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
 void display(void) {
@@ -58,8 +18,7 @@ void display(void) {
     // load an identity matrix
     glLoadIdentity();
 
-    // drawTriangles();
-    drawCircle(240, 240, 100);
+    draw(toDraw);
 
     // to make the transperancy take effect,
     // this is necessary
@@ -74,16 +33,6 @@ void display(void) {
     }
 }
 
-void reshape(int w, int h)
-{
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0, (GLfloat)w, 0, (GLfloat)h);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
-
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
 
@@ -93,7 +42,7 @@ int main(int argc, char **argv) {
     glutInitDisplayMode(type);
 
     // size of window
-    glutInitWindowSize(640, 480);
+    glutInitWindowSize(480, 480);
 
     // create the window
     glutCreateWindow("week3");
@@ -101,7 +50,9 @@ int main(int argc, char **argv) {
     // notice that this function should be placed
     // after createWindow()
     glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
+
+    if (toDraw == CIRCLE)
+        glutReshapeFunc(reshape);
 
     glutMainLoop();
 
