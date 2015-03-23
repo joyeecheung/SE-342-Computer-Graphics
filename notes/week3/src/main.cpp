@@ -1,21 +1,36 @@
 #include "main.h"
 
-#include <cstdio>
-#include <cstdlib>
+void display(void) {
+    // clear the buffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // load an identity matrix
+    glLoadIdentity();
 
-#if defined(_WIN32) || defined(WIN32)
-#include <windows.h>
-#endif
+    // start specifying an triangle
+    glBegin(GL_TRIANGLES);
+    for (int i = 0; i < 3; ++i) {
+        glVertex3f(Triangle[i][0], Triangle[i][1], Triangle[i][2]);
+    }
+    glEnd();
 
-#include <GL/glut.h>
+    // display it
+    glutSwapBuffers();
+}
+
 
 int main(int argc, char **argv) {
-    glutInit (&argc, argv);
-    glutInitWindowSize (640, 480);
-    glutInitWindowPosition(100, 100);
-    glutInitDisplayMode ( GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-    glutCreateWindow ("week3");
+    glutInit(&argc, argv);
 
+    // Color mode
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+
+    // size of window
+    glutInitWindowSize(640, 480);
+
+    // create the window
+    glutCreateWindow("week3");
+
+    glutDisplayFunc(display);
     glutMainLoop();
 
     return 0;
