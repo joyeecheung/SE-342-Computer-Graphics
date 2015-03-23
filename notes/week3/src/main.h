@@ -12,8 +12,15 @@
 
 void display(void);
 
+const GLenum doubleBuffer = GL_TRUE;
+
 const int numTriangles = 2;
 
+GLfloat backgroundColor[4] = {
+  1.0, 1.0, 1.0, 1.0
+};
+
+// vertices of triangles
 GLfloat triangles[numTriangles][3][3] = {
   {
     { -0.90, -0.90, 0.0}, // Triangle 1
@@ -26,8 +33,13 @@ GLfloat triangles[numTriangles][3][3] = {
   }
 };
 
-enum Coordinate { X = 0, Y, Z };
-const GLfloat BLUE_R = 0.0, BLUE_G = 0.0, BLUE_B = 1.0;
+// color of triangles
+GLfloat colors[numTriangles][4] = {
+  { 0.0, 0.0, 1.0, 0.2 }, // BLUE
+  { 0.0, 1.0, 0.0, 0.3 }  // GREEN
+};
 
+enum Coordinate { X = 0, Y, Z };
+enum RGB { R = 0, G, B, A};
 
 #endif
