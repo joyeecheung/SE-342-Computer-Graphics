@@ -1,6 +1,6 @@
 #include "Shape.h"
 
-Shape toDraw = TRIANGLES;
+Shape toDraw = CIRCLE;
 
 void reshape(int w, int h) {
     glViewport(0, 0, w, h);

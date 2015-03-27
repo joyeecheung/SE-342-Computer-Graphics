@@ -8,19 +8,15 @@
 #include <GL/glut.h>
 
 enum Shape { TRIANGLES, CIRCLE };
+enum Coordinate { X = 0, Y, Z };
+enum RGB { R = 0, G, B, A};
 
 extern Shape toDraw;
 extern const GLenum doubleBuffer;
 extern const int numTriangles;
-
-enum Coordinate { X = 0, Y, Z };
-enum RGB { R = 0, G, B, A};
-
 extern GLfloat backgroundColor[4];
-
 // vertices of triangles
 extern GLfloat triangles[][3][3];
-
 // color of triangles
 extern GLfloat triangleColors[][4];
 extern GLfloat circleColor[4];

@@ -48,3 +48,14 @@ OpenGL 程序相当于一个 client，server 则是 OpenGL 的实现（可以跑
 * Models: 由点、线、三角等 primitive 的 vertex 构成
 * Shader: 为 GPU 编写的函数，vertex shader 处理 vertex，fragment shader 处理 rasterizer 生成的 fragment
 * framebuffer：放在显存
+
+### Syntax
+2uiv 3f
+* 函数 `glXxx`, `gluXxx`, `glutXxx`
+  * 没有重载，用于声明数据的函数后缀为 `(\d+)(b|f|di|f|d|ub|us|ui)(v?)`
+  * $1表示参数个数，$2表示类型，$3表示参数是否为向量
+* 类型 `GLxxx`, `GLUxxx`, `GLUTxxx`
+  * 帮助解决移植性，主要有 `*int`, `*float`, `*enum` 等
+* 常数 `GL_XXX`, `GLU_XXX`, `GLUT_XXX`
+  * 定义位于 glcorearb.h 和 glext.h
+*

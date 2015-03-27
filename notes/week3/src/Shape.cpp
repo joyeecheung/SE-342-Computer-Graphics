@@ -46,7 +46,7 @@ void drawCircle(int x0, int y0, int r) {
     glColor4f(circleColor[R], circleColor[G],
               circleColor[B], circleColor[A]);
 
-    glBegin(GL_POINTS);
+    glBegin(GL_POLYGON);
 
     // The cross
     glVertex2i(x0, y0 + r);
