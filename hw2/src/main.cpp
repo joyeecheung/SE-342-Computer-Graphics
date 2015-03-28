@@ -4,11 +4,21 @@ int width = 480, height = 480;
 
 
 void reshape(int w, int h) {
+    // Set the viewport to be the entire window
     glViewport(0, 0, w, h);
+
+    // use the projection matrix
     glMatrixMode(GL_PROJECTION);
+    // reset
     glLoadIdentity();
+
+    // Set the correct projection
     gluOrtho2D(0, (GLfloat)w, 0, (GLfloat)h);
+
+    // use the modelview matrix
     glMatrixMode(GL_MODELVIEW);
+
+    // reset
     glLoadIdentity();
 }
 
