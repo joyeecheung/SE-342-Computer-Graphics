@@ -24,10 +24,6 @@ GLfloat triangleColors[][4] = {
   { 0.0, 1.0, 0.0, 0.3 }  // Green
 };
 
-GLfloat circleColor[4] = {
-  0.5, 0.5, 1.0, 1.0  // Purple
-};
-
 void drawPoints(int x0, int y0, int x, int y) {
     glVertex2i( x + x0,  y + y0);
     glVertex2i( y + x0,  x + y0);
@@ -37,35 +33,6 @@ void drawPoints(int x0, int y0, int x, int y) {
     glVertex2i(-y + x0, -x + y0);
     glVertex2i( x + x0, -y + y0);
     glVertex2i( y + x0, -x + y0);
-}
-
-void drawCircle(int x0, int y0, int r) {
-    int x = r, y = 0;
-    int err = 1 - x;
-
-    glColor4f(circleColor[R], circleColor[G],
-              circleColor[B], circleColor[A]);
-
-    glBegin(GL_POLYGON);
-
-    // The cross
-    glVertex2i(x0, y0 + r);
-    glVertex2i(x0, y0 - r);
-    glVertex2i(x0 + r, y0);
-    glVertex2i(x0 - r, y0);
-
-    while (x >= y) {
-        drawPoints(x0, y0, x, y);
-        y++;
-        if (err < 0) {
-            err += 2 * y + 1;
-        } else {
-            x--;
-            err += 2 * (y - x) + 1;
-        }
-    }
-
-    glEnd();
 }
 
 void drawTriangles(GLfloat triangles[][3][3],
@@ -85,13 +52,4 @@ void drawTriangles(GLfloat triangles[][3][3],
                   triangleColors[i][B], triangleColors[i][A]);
     }
     glEnd();
-}
-
-void draw(Shape shape) {
-    if (shape == TRIANGLES) {
-        drawTriangles(triangles, numTriangles, triangleColors);
-    } else if (shape == CIRCLE) {
-        drawCircle(240, 240, 100);
-        
-    }
 }

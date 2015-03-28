@@ -1,6 +1,7 @@
 #include "Shape.h"
 
-Shape toDraw = CIRCLE;
+int width = 480, height = 480;
+
 
 void reshape(int w, int h) {
     glViewport(0, 0, w, h);
@@ -18,7 +19,7 @@ void display(void) {
     // load an identity matrix
     glLoadIdentity();
 
-    draw(toDraw);
+    drawTriangles(triangles, numTriangles, triangleColors);
 
     // to make the transperancy take effect,
     // this is necessary
@@ -50,9 +51,6 @@ int main(int argc, char **argv) {
     // notice that this function should be placed
     // after createWindow()
     glutDisplayFunc(display);
-
-    if (toDraw == CIRCLE)
-        glutReshapeFunc(reshape);
 
     glutMainLoop();
 
