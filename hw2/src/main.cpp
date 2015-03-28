@@ -1,25 +1,29 @@
 #include "Shape.h"
 
 int width = 480, height = 480;
-
+float angle = 0.0f;
 
 void reshape(int w, int h) {
-    // Set the viewport to be the entire window
-    glViewport(0, 0, w, h);
+    h = h == 0 ? 1 : h;  // avoid division by zero
+    float ratio =  w * 1.0f / h;
 
     // use the projection matrix
     glMatrixMode(GL_PROJECTION);
+
     // reset
     glLoadIdentity();
 
-    // Set the correct projection
-    gluOrtho2D(0, (GLfloat)w, 0, (GLfloat)h);
+    // set the viewport to be the entire window
+    glViewport(0, 0, w, h);
 
-    // use the modelview matrix
+    // set the correct perspective
+    gluPerspective(/* field of view angle */ 45.0f,
+                   /* aspect ratio */ ratio,
+                   /* near clipping plane */ 0.0f,
+                   /* far clipping plane */ 100.0f);
+
+    // go back to the modelview matrix
     glMatrixMode(GL_MODELVIEW);
-
-    // reset
-    glLoadIdentity();
 }
 
 void display(void) {
@@ -29,6 +33,11 @@ void display(void) {
     // load an identity matrix
     glLoadIdentity();
 
+    gluLookAt(0.0f, 0.0f, 3.0f,  // eye
+              0.0f, 0.0f, 0.0f,  // center
+              0.0f, 1.0f, 0.0f); // up
+
+    glRotatef(angle, 0.0f, 1.0f, 0.0f);
     drawTriangles(triangles, numTriangles, triangleColors);
 
     // to make the transperancy take effect,
@@ -36,6 +45,7 @@ void display(void) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
 
+    angle += 0.05f;
     // display it
     if (doubleBuffer) {
         glutSwapBuffers();
@@ -53,7 +63,7 @@ int main(int argc, char **argv) {
     glutInitDisplayMode(type);
 
     // size of window
-    glutInitWindowSize(480, 480);
+    glutInitWindowSize(width, height);
 
     // create the window
     glutCreateWindow("week3");
@@ -61,7 +71,8 @@ int main(int argc, char **argv) {
     // notice that this function should be placed
     // after createWindow()
     glutDisplayFunc(display);
-
+    glutReshapeFunc(reshape);
+    glutIdleFunc(display);
     glutMainLoop();
 
     return 0;

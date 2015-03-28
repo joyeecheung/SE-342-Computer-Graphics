@@ -4,24 +4,24 @@ const GLenum doubleBuffer = GL_TRUE;
 const int numTriangles = 2;
 
 GLfloat backgroundColor[4] = {
-  1.0, 1.0, 1.0, 1.0  // White
+  1.0f, 1.0f, 1.0f, 1.0f  // White
 };
 
 GLfloat triangles[][3][3] = {
   {
-    { -0.90, -0.90, 0.0}, // Triangle 1
-    {  0.85, -0.90, 0.0},
-    { -0.90,  0.85, 0.0},
+    { -0.90f, -0.90f, 0.0f}, // Triangle 1
+    {  0.85f, -0.90f, 0.0f},
+    { -0.90f,  0.85f, 0.0f},
   }, {
-    {  0.90, -0.85, 0.0}, // Triangle 2
-    {  0.90,  0.90, 0.0},
-    { -0.85,  0.90, 0.0}
+    {  0.90f, -0.85f, 0.0f}, // Triangle 2
+    {  0.90f,  0.90f, 0.0f},
+    { -0.85f,  0.90f, 0.0f}
   }
 };
 
 GLfloat triangleColors[][4] = {
-  { 0.0, 0.0, 1.0, 0.2 }, // Blue
-  { 0.0, 1.0, 0.0, 0.3 }  // Green
+  { 0.0f, 0.0f, 1.0f, 0.2f }, // Blue
+  { 0.0f, 1.0f, 0.0f, 0.3f }  // Green
 };
 
 void drawPoints(int x0, int y0, int x, int y) {
