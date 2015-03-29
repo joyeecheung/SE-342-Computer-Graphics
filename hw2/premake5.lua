@@ -1,5 +1,5 @@
 -- premake4.lua
-solution "demo"
+solution "hw2"
    configurations { "Debug", "Release" }
 
    -- A project defines one build target
