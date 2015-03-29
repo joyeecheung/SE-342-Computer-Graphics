@@ -37,7 +37,10 @@ void display(void) {
               0.0f, 0.0f, 0.0f,  // center
               0.0f, 1.0f, 0.0f); // up
 
-    glRotatef(angle, 0.0f, 1.0f, 0.0f);
+    // rotate in each frame
+    glRotatef(angle, 0.0f, 0.0f, 1.0f);
+    angle += 0.05f;
+
     drawTriangles(triangles, numTriangles, triangleColors);
 
     // to make the transperancy take effect,
@@ -45,7 +48,6 @@ void display(void) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
 
-    angle += 0.05f;
     // display it
     if (doubleBuffer) {
         glutSwapBuffers();
