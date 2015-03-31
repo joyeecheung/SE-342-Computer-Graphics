@@ -33,13 +33,13 @@ void display(void) {
     // load an identity matrix
     glLoadIdentity();
 
-    gluLookAt(0.0f, 0.0f, 3.0f,  // eye
+    gluLookAt(0.0f, 0.0f, 2.0f,  // eye
               0.0f, 0.0f, 0.0f,  // center
-              0.0f, 1.0f, 0.0f); // up
+              0.0f, 6.0f, 0.0f); // up
 
     // rotate in each frame
     glRotatef(angle, 0.0f, 0.0f, 1.0f);
-    angle += 0.05f;
+    angle += 0.02f;
 
     drawTriangles(triangles, numTriangles, triangleColors);
 
