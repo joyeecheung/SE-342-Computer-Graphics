@@ -7,6 +7,8 @@
 ## What is it?
 A rotating colorful windmill.
 
+![](preview.png)
+
 ## How to build it?
 
 You can build it with VS2013, Make and MinGW, or fallback to anything that premake5 supports(VS2005 and above).
