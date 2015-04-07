@@ -1,5 +1,7 @@
 # A demo for OpenGL
 
+Zhang Qiuyi, 12330402
+
 ## Dependencies
 * freeglut(local library, included in the project)
 * OpenGL and GLU
@@ -8,6 +10,24 @@
 A rotating colorful windmill.
 
 ![](preview.png)
+
+## File structure
+
+```
+  - doc  // report goes here
+  - include  // header files
+  - lib  // static libraries
+  - obj  // intermidiate obj files
+  - src  // source code
+
+  - freeglut.dll  // dynamic library
+  - hw2.sln   // premaked VS2013 project file
+  - main.exe  // prebuilt executable
+  - Makefile  // for MinGW and Make
+  - premake5.lua  // premake 5 script
+  - preview.png   // preview of this demo
+  - README.md   // you are reading it :)
+```
 
 ## How to build it?
 
