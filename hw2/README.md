@@ -29,15 +29,21 @@ A rotating colorful windmill.
   - README.md   // you are reading it :)
 ```
 
+## About the executable
+
+The executable is built with VS2013, so you need the libraries that come with VS2013 to run it. If you don't have VS2013 installed, you need to build it from source.
+
 ## How to build it?
 
-You can build it with VS2013, Make and MinGW, or fallback to anything that premake5 supports(VS2005 and above).
+You can build it with VS2012 or above, Make and MinGW, or fallback to anything that premake5 supports(VS2005 and above).
 
 You don't need to copy any file to any location. All libraries files(.h, .lib and .dll) are locally included. Note that it is the libraries under `include` and `lib` that will actually get linked, not your global libraries.
 
-### VS2013
+### VS2012 or above
 
-Open the `hw2.sln` with VS2013 and build the main target.
+Open the `hw2.sln` with VS and build the main target.
+
+If you are using VS2013, it will ask you to migrate the project, just click OK.
 
 ### Make and MinGW
 
