@@ -1,5 +1,5 @@
--- premake4.lua
-solution "demo"
+-- premake5.lua
+solution "hw3"
    configurations { "Debug", "Release" }
 
    -- A project defines one build target
