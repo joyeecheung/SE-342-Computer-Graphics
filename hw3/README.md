@@ -11,6 +11,8 @@ A black circle and its center.
 
 ![](preview.png)
 
+The center of the circle is quite small, so you need to look closer.
+
 ## File structure
 
 ```
@@ -21,8 +23,8 @@ A black circle and its center.
   - src  // source code
 
   - freeglut.dll  // dynamic library for prebuilt executable
-  - libgcc_s_dw2-1.dll  // dynamic library for prebuilt executable
   - hw3.sln   // premaked VS2013 project file
+  - libgcc_s_dw2-1.dll  // dynamic library for prebuilt executable
   - main.exe  // prebuilt executable
   - Makefile  // for MinGW and Make
   - premake5.lua  // premake 5 script
