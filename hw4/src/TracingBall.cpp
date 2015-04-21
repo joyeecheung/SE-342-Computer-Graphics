@@ -11,83 +11,81 @@
 
 const int VertexCount = 20, SurfaceCount = 12, EdgeCount = 30;
 
-GLfloat colors[VertexCount * 3];
+GLfloat colors[SurfaceCount][3];
 
-GLfloat vertices[] = {
-    1.214124, 0.000000, 1.589309,
-    0.375185, 1.154701, 1.589309,
-    -0.982247, 0.713644, 1.589309,
-    -0.982247, -0.713644, 1.589309,
-    0.375185, -1.154701, 1.589309,
-    1.964494, 0.000000, 0.375185,
-    0.607062, 1.868345, 0.375185,
-    -1.589309, 1.154701, 0.375185,
-    -1.589309, -1.154701, 0.375185,
-    0.607062, -1.868345, 0.375185,
-    1.589309, 1.154701, -0.375185,
-    -0.607062, 1.868345, -0.375185,
-    -1.964494, 0.000000, -0.375185,
-    -0.607062, -1.868345, -0.375185,
-    1.589309, -1.154701, -0.375185,
-    0.982247, 0.713644, -1.589309,
-    -0.375185, 1.154701, -1.589309,
-    -1.214124, 0.000000, -1.589309,
-    -0.375185, -1.154701, -1.589309,
-    0.982247, -0.713644, -1.589309
+GLfloat vertices[][3] = {
+    {1.214124, 0.000000, 1.589309},
+    {0.375185, 1.154701, 1.589309},
+    {-0.982247, 0.713644, 1.589309},
+    {-0.982247, -0.713644, 1.589309},
+    {0.375185, -1.154701, 1.589309},
+    {1.964494, 0.000000, 0.375185},
+    {0.607062, 1.868345, 0.375185},
+    {-1.589309, 1.154701, 0.375185},
+    {-1.589309, -1.154701, 0.375185},
+    {0.607062, -1.868345, 0.375185},
+    {1.589309, 1.154701, -0.375185},
+    {-0.607062, 1.868345, -0.375185},
+    {-1.964494, 0.000000, -0.375185},
+    {-0.607062, -1.868345, -0.375185},
+    {1.589309, -1.154701, -0.375185},
+    {0.982247, 0.713644, -1.589309},
+    {-0.375185, 1.154701, -1.589309},
+    {-1.214124, 0.000000, -1.589309},
+    {-0.375185, -1.154701, -1.589309},
+    {0.982247, -0.713644, -1.58930}
 };
 
-GLushort indices[] = {
-    0,  1,  2,  3,  4,
-    0,  5,  10, 6,  1,
-    1,  6,  11, 7,  2,
-    2,  7,  12, 8,  3,
-    3,  8,  13, 9,  4,
-    4,  9,  14, 5,  0,
-    15, 10, 5,  14, 19,
-    16, 11, 6,  10, 15,
-    17, 12, 7,  11, 16,
-    18, 13, 8,  12, 17,
-    19, 14, 9,  13, 18,
-    19, 18, 17, 16, 15
+GLushort indices[][5] = {
+    {0,  1,  2,  3,  4},
+    {0,  5,  10, 6,  1},
+    {1,  6,  11, 7,  2},
+    {2,  7,  12, 8,  3},
+    {3,  8,  13, 9,  4},
+    {4,  9,  14, 5,  0},
+    {15, 10, 5,  14, 19},
+    {16, 11, 6,  10, 15},
+    {17, 12, 7,  11, 16},
+    {18, 13, 8,  12, 17},
+    {19, 14, 9,  13, 18},
+    {19, 18, 17, 16, 15}
 };
 
 float randomIntensity() {
-    int r = rand() % 256;
-    float res = r / 256.0;
-    return r / 256.0;
+    return (rand() % 256) / 256.0;
 }
 
 void generateColors() {
     for (int i = 0; i < SurfaceCount; ++i) {
-        GLfloat color[3];
-        color[0] = randomIntensity();
-        color[1] = randomIntensity();
-        color[2] = randomIntensity();
-        
-        for (int j = 0; j < 5; ++j) {
-            int vertex = indices[i * 5 + j];
-
-            for (int k = 0; k < 3; ++k)
-                colors[vertex * 3 + k] = color[k];
+        for (int j = 0; j < 3; ++j) {
+            colors[i][j] = randomIntensity();
         }
     }
 }
 
 void draw(void) {
-    glEnableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glColorPointer(3, GL_FLOAT, 0, colors);
-    glVertexPointer(3, GL_FLOAT, 0, vertices);
-
-    glPushMatrix();
-    glColor4f(1, 1, 1, 1);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDrawArrays(GL_POLYGON, 0, VertexCount);
-    // glDrawElements(GL_TRIANGLE_FAN, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_SHORT, indices);
-    glPopMatrix();
-
-    glDisableClientState(GL_COLOR_ARRAY);
-    glDisableClientState(GL_VERTEX_ARRAY);
+    if (menuEntry == 1) {
+        for (int i = 0; i < SurfaceCount; ++i) {
+            glBegin(GL_POLYGON);
+            glColor3fv(colors[i]);
+            
+            for (int j = 0; j < 5; ++j) {
+                int v = indices[i][j];
+                glVertex3fv(vertices[v]);
+            }
+            glEnd();
+        }
+    } else {
+        for (int i = 0; i < SurfaceCount; ++i) {
+            glBegin(GL_LINE_LOOP);
+            glColor3fv(colors[i]);
+            for (int j = 0; j < 5; ++j) {
+                int v = indices[i][j];
+                glVertex3fv(vertices[v]);
+            }
+            glEnd();
+        }
+    }
 }
 
 
