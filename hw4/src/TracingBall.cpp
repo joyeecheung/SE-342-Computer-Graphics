@@ -9,12 +9,95 @@
 
 #include <GL/glut.h>
 
+const int VertexCount = 20, SurfaceCount = 12, EdgeCount = 30;
+
+GLfloat colors[VertexCount * 3];
+
+GLfloat vertices[] = {
+    1.214124, 0.000000, 1.589309,
+    0.375185, 1.154701, 1.589309,
+    -0.982247, 0.713644, 1.589309,
+    -0.982247, -0.713644, 1.589309,
+    0.375185, -1.154701, 1.589309,
+    1.964494, 0.000000, 0.375185,
+    0.607062, 1.868345, 0.375185,
+    -1.589309, 1.154701, 0.375185,
+    -1.589309, -1.154701, 0.375185,
+    0.607062, -1.868345, 0.375185,
+    1.589309, 1.154701, -0.375185,
+    -0.607062, 1.868345, -0.375185,
+    -1.964494, 0.000000, -0.375185,
+    -0.607062, -1.868345, -0.375185,
+    1.589309, -1.154701, -0.375185,
+    0.982247, 0.713644, -1.589309,
+    -0.375185, 1.154701, -1.589309,
+    -1.214124, 0.000000, -1.589309,
+    -0.375185, -1.154701, -1.589309,
+    0.982247, -0.713644, -1.589309
+};
+
+GLushort indices[] = {
+    0,  1,  2,  3,  4,
+    0,  5,  10, 6,  1,
+    1,  6,  11, 7,  2,
+    2,  7,  12, 8,  3,
+    3,  8,  13, 9,  4,
+    4,  9,  14, 5,  0,
+    15, 10, 5,  14, 19,
+    16, 11, 6,  10, 15,
+    17, 12, 7,  11, 16,
+    18, 13, 8,  12, 17,
+    19, 14, 9,  13, 18,
+    19, 18, 17, 16, 15
+};
+
+float randomIntensity() {
+    int r = rand() % 256;
+    float res = r / 256.0;
+    return r / 256.0;
+}
+
+void generateColors() {
+    for (int i = 0; i < SurfaceCount; ++i) {
+        GLfloat color[3];
+        color[0] = randomIntensity();
+        color[1] = randomIntensity();
+        color[2] = randomIntensity();
+        
+        for (int j = 0; j < 5; ++j) {
+            int vertex = indices[i * 5 + j];
+
+            for (int k = 0; k < 3; ++k)
+                colors[vertex * 3 + k] = color[k];
+        }
+    }
+}
+
+void draw(void) {
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glColorPointer(3, GL_FLOAT, 0, colors);
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+    glPushMatrix();
+    glColor4f(1, 1, 1, 1);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawArrays(GL_POLYGON, 0, VertexCount);
+    // glDrawElements(GL_TRIANGLE_FAN, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_SHORT, indices);
+    glPopMatrix();
+
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+
 void display(void) {
     // clear the buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+    glShadeModel(GL_SMOOTH);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -22,22 +105,24 @@ void display(void) {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-
-    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-
     glTranslatef(cameraPosition[0], cameraPosition[1], cameraPosition[2]);
 
     glRotatef(cameraRotation[0], 1.0f, 0.0f, 0.0f);
     glRotatef(cameraRotation[1], 0.0f, 1.0f, 0.0f);
 
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE) ;
+
     // ------------- Drawings --------------
     if (menuEntry == 1) {
-        glutSolidTeapot(10.0);
+		// glutSolidDodecahedron();
+        draw();
     } else if(menuEntry == 2) {
-        glutWireTeapot(10.0);
+		// glutWireDodecahedron();
+        draw();
     }
 
     // ------------- Drawing ends -----------
@@ -79,6 +164,10 @@ void init(int argc, char **argv) {
     glutMenuStateFunc(menuState);
     glutMotionFunc  (mouseMotion);
     glutIdleFunc    (idle);
+
+    glClearColor(0, 0, 0, 0);
+    generateColors();
+
 }
 
 

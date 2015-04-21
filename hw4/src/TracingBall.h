@@ -23,7 +23,7 @@ bool isFullScreen = false;
 int windowID;
 
 // camera attributes
-float cameraPosition[3]  = { 0.0, 0.0, -50.0 };
+float cameraPosition[3]  = { 0.0, 0.0, -10.0 };
 float cameraDirection[3] = { 0.0, 0.0, 0.0 };
 
 // rotation values for the navigation
