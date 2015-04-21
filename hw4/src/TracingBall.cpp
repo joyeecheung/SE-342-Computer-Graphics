@@ -10,29 +10,32 @@
 #include <GL/glut.h>
 
 const int VertexCount = 20, SurfaceCount = 12, EdgeCount = 30;
+const GLfloat translateFactor = 30.0;
+int width = 640, height = 480;
+GLfloat aspect = (GLfloat) width / (GLfloat) height;
 
 GLfloat colors[SurfaceCount][3];
 
 GLfloat vertices[][3] = {
     {1.214124, 0.000000, 1.589309},
     {0.375185, 1.154701, 1.589309},
-    {-0.982247, 0.713644, 1.589309},
-    {-0.982247, -0.713644, 1.589309},
+    { -0.982247, 0.713644, 1.589309},
+    { -0.982247, -0.713644, 1.589309},
     {0.375185, -1.154701, 1.589309},
     {1.964494, 0.000000, 0.375185},
     {0.607062, 1.868345, 0.375185},
-    {-1.589309, 1.154701, 0.375185},
-    {-1.589309, -1.154701, 0.375185},
+    { -1.589309, 1.154701, 0.375185},
+    { -1.589309, -1.154701, 0.375185},
     {0.607062, -1.868345, 0.375185},
     {1.589309, 1.154701, -0.375185},
-    {-0.607062, 1.868345, -0.375185},
-    {-1.964494, 0.000000, -0.375185},
-    {-0.607062, -1.868345, -0.375185},
+    { -0.607062, 1.868345, -0.375185},
+    { -1.964494, 0.000000, -0.375185},
+    { -0.607062, -1.868345, -0.375185},
     {1.589309, -1.154701, -0.375185},
     {0.982247, 0.713644, -1.589309},
-    {-0.375185, 1.154701, -1.589309},
-    {-1.214124, 0.000000, -1.589309},
-    {-0.375185, -1.154701, -1.589309},
+    { -0.375185, 1.154701, -1.589309},
+    { -1.214124, 0.000000, -1.589309},
+    { -0.375185, -1.154701, -1.589309},
     {0.982247, -0.713644, -1.58930}
 };
 
@@ -68,7 +71,7 @@ void draw(void) {
         for (int i = 0; i < SurfaceCount; ++i) {
             glBegin(GL_POLYGON);
             glColor3fv(colors[i]);
-            
+
             for (int j = 0; j < 5; ++j) {
                 int v = indices[i][j];
                 glVertex3fv(vertices[v]);
@@ -99,7 +102,7 @@ void display(void) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(50.0, 1.33, 1.0, 100000.0);
+    gluPerspective(50.0, aspect, 1.0, 100000.0);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -116,10 +119,10 @@ void display(void) {
 
     // ------------- Drawings --------------
     if (menuEntry == 1) {
-		// glutSolidDodecahedron();
+        // glutSolidDodecahedron();
         draw();
-    } else if(menuEntry == 2) {
-		// glutWireDodecahedron();
+    } else if (menuEntry == 2) {
+        // glutWireDodecahedron();
         draw();
     }
 
@@ -173,15 +176,16 @@ void idle(void) {
     glutPostRedisplay();
 }
 
-void reshape(int width, int height) {
-
-    glViewport(0, 0, width, height);
+void reshape(int w, int h) {
+    aspect = (GLfloat)w / (GLfloat)h;
+    glViewport(0, 0, w, h);
 
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(75.0, 1.33, 1.0, 1000.0);
+    glLoadIdentity();    
+    gluPerspective(50.0, aspect, 1.0, 100000.0);
 
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
 // mouse callback
@@ -212,10 +216,10 @@ void mouse(int button, int state, int x, int y) {
             leftActive += 1;
         } else {
             leftActive -= 1;
-        } 
+        }
         mouseX = x;
         mouseY = y;
-    } else if (button == GLUT_RIGHT_BUTTON&& !menuMode) {
+    } else if (button == GLUT_RIGHT_BUTTON && !menuMode) {
         if (state == GLUT_DOWN) {
             rightActive += 1;
             lastXOffset = 0.0;
@@ -231,27 +235,25 @@ void mouse(int button, int state, int x, int y) {
 }
 
 void mouseMotion(int x, int y) {
-
     float xOffset = 0.0, yOffset = 0.0, zOffset = 0.0;
-
     if (leftActive) {
-        cameraRotation[0] += ((mouseY - y) * 180.0f) / 200.0f;
-        cameraRotation[1] += ((mouseX - x) * 180.0f) / 200.0f;
+        cameraRotation[0] += (mouseY - y);
+        cameraRotation[1] += (mouseX - x);
 
         mouseY = y;
         mouseX = x;
     } else if (rightActive) { // translating
         xOffset = (mouseX + x);
         if (!lastXOffset == 0.0) {
-            cameraPosition[0]   -= (xOffset - lastXOffset) / 8.0;
-            cameraDirection[0]  -= (xOffset - lastXOffset) / 8.0;
+            cameraPosition[0]   -= (xOffset - lastXOffset) / translateFactor;
+            cameraDirection[0]  -= (xOffset - lastXOffset) / translateFactor;
         }
         lastXOffset = xOffset;
 
         yOffset = (mouseY + y);
         if (!lastYOffset == 0.0) {
-            cameraPosition[1]   += (yOffset - lastYOffset) / 8.0;
-            cameraDirection[1]  += (yOffset - lastYOffset) / 8.0;
+            cameraPosition[1]   += (yOffset - lastYOffset) / translateFactor;
+            cameraDirection[1]  += (yOffset - lastYOffset) / translateFactor;
         }
         lastYOffset = yOffset;
 
@@ -276,8 +278,7 @@ void keyboard(unsigned char key, int x, int y) {
             glutFullScreen();
         else {
             glutSetWindow(windowID);
-            glutPositionWindow(100, 100);
-            glutReshapeWindow(640, 480);
+            glutReshapeWindow(width, height);
         }
         break;
     }
