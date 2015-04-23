@@ -7,45 +7,64 @@
 
 #include <GL/glut.h>
 
-// GLUT callbacks and functions
+// enums
+extern const int SOLID;
+extern const int WIREFRAME;
 
+// variables
+
+// window attribute
+extern bool isFullScreen;
+extern int windowID;
+extern int width;
+extern GLfloat aspect;
+
+// lighting
+extern GLfloat lightpos[4];
+
+// camera attributes
+extern float cameraPosition[3];
+extern float cameraDirection[3];
+extern float cameraRotation[3];
+extern GLfloat translateFactor;
+
+// mouse button states
+extern bool leftActive;
+extern bool middleActive;
+extern bool rightActive;
+
+// position of the mouse when pressed
+extern int mouseX;
+extern float lastX;
+
+// menu attributes
+extern int menuID;
+extern int menuEntry;
+extern bool menuMode;
+
+// data
+extern const int vertexCount;
+extern const int surfaceCount;
+extern const int edgeCount;
+extern GLfloat colors[][3];
+extern GLfloat vertices[][3];
+extern GLushort indices[][5];
+
+// callbacks and functions
 void init(int argc, char **argv);
 void display(void);
-void idle(void);
 void reshape(int width, int height);
+void idle(void);
+
+int createMenu(void);
+void menuState(int status);
+void menu(int num);
+
 void mouse(int button, int state, int x, int y);
 void mouseMotion(int x, int y);
 void keyboard(unsigned char key, int x, int y);
-void menu(int num);
-void createMenu(void);
 
-bool isFullScreen = false;
-int windowID;
-
-// camera attributes
-float cameraPosition[3]  = { 0.0, 0.0, -10.0 };
-float cameraDirection[3] = { 0.0, 0.0, 0.0 };
-
-// rotation values for the navigation
-float cameraRotation[3] = { 0.0, 0.0, 0.0 };
-
-//-----------------------------------------------------------------------------
-
-// parameters for the navigation
-
-// position of the mouse when pressed
-int mouseX = 0, mouseY = 0;
-float lastXOffset = 0.0, lastYOffset = 0.0, lastZOffset = 0.0;
-// mouse button states
-int leftActive = 0;
-int middleActive = 0;
-int rightActive = 0;
-// modifier state
-int shiftActive = 0, altActive = 0, ctrlActive = 0;
-
-GLfloat lightpos[4] = { 5.0, 15.0, 10.0, 1.0 };
-
-int menuId;
-int menuEntry = 1;
-bool menuMode = false;
+float randomIntensity(void);
+void generateColors(GLfloat colors[][3], int surfaceCount);
+void draw(GLenum type);
 #endif
