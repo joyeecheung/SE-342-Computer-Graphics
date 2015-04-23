@@ -1,5 +1,5 @@
 #include "TracingBall.h"
-
+#include "GLUTWindow.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -10,7 +10,7 @@
 
 #include <GL/glut.h>
 
-Window window;
+GLUTWindow window;
 Menu menu;
 
 void onMenu(int num) {

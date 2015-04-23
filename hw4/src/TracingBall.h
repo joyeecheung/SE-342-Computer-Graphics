@@ -9,44 +9,6 @@
 #include <map>
 #include <string>
 
-class Window {
-public:
-    Window(int w = 640, int h = 480)
-        : width(w), height(h), isFullScreen(false) {
-        aspect = (GLfloat) width / (GLfloat) height;
-        oldWidth = width;
-        oldHeight = height;
-    }
-    void create(const char* title) {
-        glutInitWindowSize (width, height);
-        id = glutCreateWindow(title);
-    }
-    void toggleFullScreen() {
-        isFullScreen = !isFullScreen;
-        if (isFullScreen) {
-            glutFullScreen();
-            oldWidth = width;
-            oldHeight = height;
-        } else {
-            glutSetWindow(id);
-            glutReshapeWindow(oldWidth, oldHeight);
-        }
-    }
-    void update(int w, int h) {
-        width = w;
-        height = h;
-        aspect = (GLfloat)w / (GLfloat)h;
-    }
-
-    int width, height;
-    GLfloat aspect;
-
-private:
-    bool isFullScreen;
-    int id;
-    int oldWidth, oldHeight;
-};
-
 struct Vector3 {
     float x;
     float y;
@@ -89,10 +51,6 @@ private:
     Vector3 lastOffset;
 };
 
-void createMenu(int button, std::map<std::string, int> entries,
-            int defaultEntry);
-void onMenu(int num);
-void menuState(int status);
 
 struct Menu {
     int id;
@@ -100,9 +58,6 @@ struct Menu {
     bool visible;
 };
 
-void onMenu(int num);
-
-extern Window window;
 extern Menu menu;
 
 // enums
@@ -119,6 +74,11 @@ extern GLushort indices[][5];
 // callbacks and functions
 void init(int argc, char **argv);
 void initCamera(Camera &camera);
+
+void createMenu(int button, std::map<std::string, int> entries,
+            int defaultEntry);
+void onMenu(int num);
+void menuState(int status);
 
 void display(void);
 void reshape(int width, int height);
