@@ -10,34 +10,40 @@
 
 #include <GL/glut.h>
 
-const int SOLID = 1, WIREFRAME = 2;
+Window window;
+Menu menu;
 
-// window attribute
-bool isFullScreen = false;
-int windowID;
-int width = 640, height = 480;
-GLfloat aspect = (GLfloat) width / (GLfloat) height;
+void onMenu(int num) {
+    menu.entry = num;
+}
 
-// lighting
-GLfloat lightpos[4] = { 5.0, 15.0, 10.0, 1.0 };
+void menuState(int status) {
+    if (status == GLUT_MENU_IN_USE)
+        menu.visible = true;
+}
 
-// camera attributes
+void createMenu(int button, std::map<std::string, int> entries, int defaultEntry) {
+    menu.visible = false;
+    menu.id = glutCreateMenu(onMenu);
+    menu.entry = defaultEntry;
+    for (std::map<std::string, int>::iterator it = entries.begin();
+        it != entries.end(); ++it) {
+        glutAddMenuEntry(it->first.c_str(), it->second);
+    }
+    glutMenuStateFunc(menuState);
+    glutAttachMenu(button);
+}
+
 Camera camera;
 GLfloat translateFactor = 30.0;
 
-// mouse button states
 bool leftActive = false;
 bool middleActive = false;
 bool rightActive = false;
-
-// position of the mouse when pressed
 Vector3 mouse;
 Vector3 lastOffset;
 
-// menu attributes
-int menuID;
-int menuEntry = SOLID;
-bool menuMode = false;
+const int SOLID = 1, WIREFRAME = 2;
 
 // data
 const int vertexCount = 20, surfaceCount = 12, edgeCount = 30;
@@ -84,11 +90,15 @@ GLushort indices[surfaceCount][5] = {
 void init(int argc, char **argv) {
     // create window and menu
     glutInit (&argc, argv);
-    glutInitWindowSize (width, height);
-    glutInitDisplayMode ( GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 
-    windowID = glutCreateWindow ("Virtual Tracing Ball");
-    menuID = createMenu();
+    window.create("Virtual Tracing Ball");
+
+    std::map<std::string, int> entries;
+    entries["Solid"] = SOLID;
+    entries["Wire Frame"] = WIREFRAME;
+
+    createMenu(GLUT_MIDDLE_BUTTON, entries, SOLID);
 
     glClearColor(0, 0, 0, 0);
     generateColors(colors, surfaceCount);
@@ -129,7 +139,7 @@ void display(void) {
     // Projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(50.0, aspect, 1.0, 1000.0);
+    gluPerspective(50.0, window.aspect, 1.0, 1000.0);
 
     // Model view
     glMatrixMode(GL_MODELVIEW);
@@ -139,6 +149,7 @@ void display(void) {
     glRotatef(camera.rotation.y, 0.0f, 1.0f, 0.0f);
 
     // Lighting
+    GLfloat lightpos[4] = { 5.0, 15.0, 10.0, 1.0 };
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
@@ -146,7 +157,7 @@ void display(void) {
     glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE) ;
 
     // ------------- Drawings --------------
-    draw(menuEntry == SOLID ? GL_POLYGON : GL_LINE_LOOP);
+    draw(menu.entry == SOLID ? GL_POLYGON : GL_LINE_LOOP);
     // ------------- Drawing ends -----------
 
     glutSwapBuffers();
@@ -155,13 +166,13 @@ void display(void) {
 // aspect
 void reshape(int w, int h) {
     // resize viewport
+    window.update(w, h);
     glViewport(0, 0, w, h);
 
     // resize perspective
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();    
-    aspect = (GLfloat)w / (GLfloat)h;
-    gluPerspective(50.0, aspect, 1.0, 1000.0);
+    glLoadIdentity();
+    gluPerspective(50.0, window.aspect, 1.0, 1000.0);
 
     // reload
     glMatrixMode(GL_MODELVIEW);
@@ -172,29 +183,10 @@ void idle(void) {
     glutPostRedisplay();
 }
 
-int createMenu(void) {
-    int menuID = glutCreateMenu(menu);
-    menuEntry = SOLID;
-    glutAddMenuEntry("Solid", SOLID);
-    glutAddMenuEntry("WireFrame", WIREFRAME);
-    glutMenuStateFunc(menuState);
-    glutAttachMenu(GLUT_MIDDLE_BUTTON);
-    return menuID;
-}
-
-void menuState(int status) {
-    if (status == GLUT_MENU_IN_USE)
-        menuMode = true;
-}
-
-void menu(int num) {
-    menuEntry = num;
-}
-
 // menuMode
 void mouseFunc(int button, int state, int x, int y) {
     // get the mouse buttons and initialize offsets
-    if (button == GLUT_LEFT_BUTTON && !menuMode) {
+    if (button == GLUT_LEFT_BUTTON && !menu.visible) {
         if (state == GLUT_DOWN) {
             leftActive = true;
         } else {
@@ -202,7 +194,7 @@ void mouseFunc(int button, int state, int x, int y) {
         }
         mouse.x = x;
         mouse.y = y;
-    } else if (button == GLUT_RIGHT_BUTTON && !menuMode) {
+    } else if (button == GLUT_RIGHT_BUTTON && !menu.visible) {
         if (state == GLUT_DOWN) {
             rightActive = true;
             lastOffset.x = 0.0;
@@ -212,8 +204,8 @@ void mouseFunc(int button, int state, int x, int y) {
         }
         mouse.x = x;
         mouse.y = y;
-    } else if (menuMode) {
-        menuMode = false;
+    } else if (menu.visible) {
+        menu.visible = false;
     }
 }
 
@@ -251,13 +243,7 @@ void keyboard(unsigned char key, int x, int y) {
 #endif
     // full screen
     case 'f':
-        isFullScreen = !isFullScreen;
-        if (isFullScreen)
-            glutFullScreen();
-        else {
-            glutSetWindow(windowID);
-            glutReshapeWindow(width, height);
-        }
+        window.toggleFullScreen();
         break;
     }
 }
