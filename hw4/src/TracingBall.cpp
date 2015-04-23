@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
 
 #if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
@@ -21,9 +22,7 @@ GLfloat aspect = (GLfloat) width / (GLfloat) height;
 GLfloat lightpos[4] = { 5.0, 15.0, 10.0, 1.0 };
 
 // camera attributes
-float cameraPosition[3]  = { 0.0, 0.0, -10.0 };
-float cameraDirection[3] = { 0.0, 0.0, 0.0 };
-float cameraRotation[3] = { 0.0, 0.0, 0.0 };
+Camera camera;
 GLfloat translateFactor = 30.0;
 
 // mouse button states
@@ -32,8 +31,8 @@ bool middleActive = false;
 bool rightActive = false;
 
 // position of the mouse when pressed
-int mouseX = 0, mouseY = 0;
-float lastX = 0.0, lastY = 0.0, lastZ = 0.0;
+Vector3 mouse;
+Vector3 lastOffset;
 
 // menu attributes
 int menuID;
@@ -91,19 +90,32 @@ void init(int argc, char **argv) {
     windowID = glutCreateWindow ("Virtual Tracing Ball");
     menuID = createMenu();
 
+    glClearColor(0, 0, 0, 0);
+    generateColors(colors, surfaceCount);
+    initCamera(camera);
+
+    float zeros[3] = {0.0, 0.0, 0.0};
+    mouse.set(zeros);
+    lastOffset.set(zeros);
+
     // Register callbacks
     glutDisplayFunc (display);
     glutReshapeFunc (reshape);
     glutKeyboardFunc(keyboard);
-    glutMouseFunc   (mouse);
+    glutMouseFunc   (mouseFunc);
     glutMotionFunc  (mouseMotion);
     glutIdleFunc    (idle);
-
-    glClearColor(0, 0, 0, 0);
-    generateColors(colors, surfaceCount);
 }
 
-// aspect, cameraPosition, cameraRotation, menuEntry
+void initCamera(Camera &camera) {
+    float position[3]  = { 0.0, 0.0, -10.0 };
+    float direction[3] = { 0.0, 0.0, 0.0 };
+    float rotation[3] = { 0.0, 0.0, 0.0 };
+
+    camera.set(position, direction, rotation);
+}
+
+// aspect, camera.position, camera.rotation, menuEntry
 // lightpos
 void display(void) {
     // Clear the buffers
@@ -122,9 +134,9 @@ void display(void) {
     // Model view
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(cameraPosition[0], cameraPosition[1], cameraPosition[2]);
-    glRotatef(cameraRotation[0], 1.0f, 0.0f, 0.0f);
-    glRotatef(cameraRotation[1], 0.0f, 1.0f, 0.0f);
+    glTranslatef(camera.position.x, camera.position.y, camera.position.z);
+    glRotatef(camera.rotation.x, 1.0f, 0.0f, 0.0f);
+    glRotatef(camera.rotation.y, 0.0f, 1.0f, 0.0f);
 
     // Lighting
     glEnable(GL_LIGHTING);
@@ -180,7 +192,7 @@ void menu(int num) {
 }
 
 // menuMode
-void mouse(int button, int state, int x, int y) {
+void mouseFunc(int button, int state, int x, int y) {
     // get the mouse buttons and initialize offsets
     if (button == GLUT_LEFT_BUTTON && !menuMode) {
         if (state == GLUT_DOWN) {
@@ -188,18 +200,18 @@ void mouse(int button, int state, int x, int y) {
         } else {
             leftActive = false;
         }
-        mouseX = x;
-        mouseY = y;
+        mouse.x = x;
+        mouse.y = y;
     } else if (button == GLUT_RIGHT_BUTTON && !menuMode) {
         if (state == GLUT_DOWN) {
             rightActive = true;
-            lastX = 0.0;
-            lastY = 0.0;
+            lastOffset.x = 0.0;
+            lastOffset.y = 0.0;
         } else {
             rightActive = false;
         }
-        mouseX = x;
-        mouseY = y;
+        mouse.x = x;
+        mouse.y = y;
     } else if (menuMode) {
         menuMode = false;
     }
@@ -208,24 +220,24 @@ void mouse(int button, int state, int x, int y) {
 void mouseMotion(int x, int y) {
     float xOffset = 0.0, yOffset = 0.0, zOffset = 0.0;
     if (leftActive) { // rotating
-        cameraRotation[0] += (mouseY - y);
-        cameraRotation[1] += (mouseX - x);
+        camera.rotation.x += (mouse.y - y);
+        camera.rotation.y += (mouse.x - x);
 
-        mouseY = y;
-        mouseX = x;
+        mouse.y = y;
+        mouse.x = x;
     } else if (rightActive) { // translating
-        xOffset = (mouseX + x);
-        if (!lastX == 0.0) {
-            cameraPosition[0]  -= (xOffset - lastX) / translateFactor;
-            cameraDirection[0] -= (xOffset - lastX) / translateFactor;
+        xOffset = (mouse.x + x);
+        if (!fabs(lastOffset.x - 0.0) < 1e-6) {
+            camera.position.x  -= (xOffset - lastOffset.x) / translateFactor;
+            camera.direction.x -= (xOffset - lastOffset.x) / translateFactor;
         }
-        lastX = xOffset;
-        yOffset = (mouseY + y);
-        if (!lastY == 0.0) {
-            cameraPosition[1]  += (yOffset - lastY) / translateFactor;
-            cameraDirection[1] += (yOffset - lastY) / translateFactor;
+        lastOffset.x = xOffset;
+        yOffset = (mouse.y + y);
+        if (!fabs(lastOffset.y - 0.0) < 1e-6) {
+            camera.position.y  += (yOffset - lastOffset.y) / translateFactor;
+            camera.direction.y += (yOffset - lastOffset.y) / translateFactor;
         }
-        lastY = yOffset;
+        lastOffset.y = yOffset;
     }
 }
 

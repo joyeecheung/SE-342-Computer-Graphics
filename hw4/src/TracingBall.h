@@ -16,26 +16,49 @@ extern const int WIREFRAME;
 // window attribute
 extern bool isFullScreen;
 extern int windowID;
-extern int width;
+extern int width, height;
 extern GLfloat aspect;
 
 // lighting
 extern GLfloat lightpos[4];
 
+struct Vector3 {
+    float x;
+    float y;
+    float z;
+
+    void set(const float arr[3]) {
+        x = arr[0];
+        y = arr[1];
+        z = arr[2];
+    }
+};
+
 // camera attributes
-extern float cameraPosition[3];
-extern float cameraDirection[3];
-extern float cameraRotation[3];
+struct Camera {
+    Vector3 position;
+    Vector3 direction;
+    Vector3 rotation;
+
+    void set(float pos[3], float dir[3], float rot[3]) {
+        position.set(pos);
+        direction.set(dir);
+        rotation.set(rot);
+    }
+};
+
+extern Camera camera;
 extern GLfloat translateFactor;
 
 // mouse button states
 extern bool leftActive;
 extern bool middleActive;
 extern bool rightActive;
+extern bool startRotation;
+extern bool startTranslation;
 
-// position of the mouse when pressed
-extern int mouseX;
-extern float lastX;
+extern Vector3 mouse;
+extern Vector3 lastOffset;
 
 // menu attributes
 extern int menuID;
@@ -52,6 +75,8 @@ extern GLushort indices[][5];
 
 // callbacks and functions
 void init(int argc, char **argv);
+void initCamera(Camera &camera);
+
 void display(void);
 void reshape(int width, int height);
 void idle(void);
@@ -60,7 +85,7 @@ int createMenu(void);
 void menuState(int status);
 void menu(int num);
 
-void mouse(int button, int state, int x, int y);
+void mouseFunc(int button, int state, int x, int y);
 void mouseMotion(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 
