@@ -1,4 +1,4 @@
-# Bresenham Circle
+# Virtual Tracing Ball
 
 Zhang Qiuyi, 12330402
 
@@ -7,27 +7,31 @@ Zhang Qiuyi, 12330402
 * OpenGL and GLU
 
 ## What is it?
-A black circle and its center.
+A colorful dodecahedron that can be manipulated(rotated/tranlsated) with the mouse.
 
-![](preview.png)
+![](preview.png).
 
-The center of the circle is quite small, so you need to look closer.
+### Operations
+* Drag with the left button of the mouse to rotate the dodecahedron.
+* Drag with the right button of the mouse to translate the dodecahedron.
+* Hit the middle button of the mouse to choose how will the dodecahedron be displayed(solid or wireframe)
+* Hit the `F` key to toggle fullscreen mode
+* Hit the `esc` key to exit
 
 ## File structure
 
 ```
   - doc  // report goes here
+  - data // .off data file goes here
   - include  // header files
   - lib  // static libraries
   - obj  // intermidiate obj files
   - src  // source code
 
   - freeglut.dll  // dynamic library for prebuilt executable
-  - hw3.sln   // premaked VS2013 project file
-  - libgcc_s_dw2-1.dll  // dynamic library for prebuilt executable
+  - TracingBall.sln   // premaked VS2012 project file
   - main.exe  // prebuilt executable
-  - Makefile  // for MinGW and Make
-  - premake5.lua  // premake 5 script
+  - premake5.lua  // premake5 script
   - preview.png   // preview of this demo
   - README.md   // you are reading it :)
 ```
@@ -44,7 +48,7 @@ You don't need to copy any file to any location. All libraries files(.h, .lib an
 
 ### VS2012 or above
 
-Open the `hw3.sln` with VS and build the main target.
+Open the `TracingBall.sln` with VS and build the main target.
 
 If you are using VS2013, it will ask you to migrate the project, just click OK.
 
