@@ -12,7 +12,7 @@
 int main(int argc, char **argv) {
     printf("Virtual Tracing Ball\n\n");
     printf("keys:\n");
-    printf("\tf - toggle fullscreen\n");
+    printf("\tf\t- toggle fullscreen\n");
     printf("\tesc\t- exit\n\n");
 
     printf("mouse:\n");

@@ -27,7 +27,9 @@ void init(int argc, char **argv) {
     try {
         dodecahedron.load("data/dodecahedron.off");
     } catch (const char *msg) {
+        printf("\n----------ERROR!!----------\n");
         printf(msg);
+        printf("-----------------------------\n");
         exit(1);
     }
 
