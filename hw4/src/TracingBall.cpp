@@ -1,8 +1,7 @@
 #include "TracingBall.h"
-#include "GLUTWindow.h"
+
 #include <cstdio>
 #include <cstdlib>
-#include <cmath>
 
 #if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
@@ -12,6 +11,7 @@
 
 GLUTWindow window;
 Menu menu;
+Tracer tracer;
 
 void onMenu(int num) {
     menu.entry = num;
@@ -34,58 +34,15 @@ void createMenu(int button, std::map<std::string, int> entries, int defaultEntry
     glutAttachMenu(button);
 }
 
-Camera camera;
-GLfloat translateFactor = 30.0;
+// Camera camera;
+// GLfloat translateFactor = 30.0;
 
-bool leftActive = false;
-bool middleActive = false;
-bool rightActive = false;
-Vector3 mouse;
-Vector3 lastOffset;
+// bool leftActive = false;
+// bool middleActive = false;
+// bool rightActive = false;
+// Vector3 mouse;
+// Vector3 lastOffset;
 
-const int SOLID = 1, WIREFRAME = 2;
-
-// data
-const int vertexCount = 20, surfaceCount = 12, edgeCount = 30;
-GLfloat colors[surfaceCount][3];
-
-GLfloat vertices[vertexCount][3] = {
-    {1.214124, 0.000000, 1.589309},
-    {0.375185, 1.154701, 1.589309},
-    { -0.982247, 0.713644, 1.589309},
-    { -0.982247, -0.713644, 1.589309},
-    {0.375185, -1.154701, 1.589309},
-    {1.964494, 0.000000, 0.375185},
-    {0.607062, 1.868345, 0.375185},
-    { -1.589309, 1.154701, 0.375185},
-    { -1.589309, -1.154701, 0.375185},
-    {0.607062, -1.868345, 0.375185},
-    {1.589309, 1.154701, -0.375185},
-    { -0.607062, 1.868345, -0.375185},
-    { -1.964494, 0.000000, -0.375185},
-    { -0.607062, -1.868345, -0.375185},
-    {1.589309, -1.154701, -0.375185},
-    {0.982247, 0.713644, -1.589309},
-    { -0.375185, 1.154701, -1.589309},
-    { -1.214124, 0.000000, -1.589309},
-    { -0.375185, -1.154701, -1.589309},
-    {0.982247, -0.713644, -1.58930}
-};
-
-GLushort indices[surfaceCount][5] = {
-    {0,  1,  2,  3,  4},
-    {0,  5,  10, 6,  1},
-    {1,  6,  11, 7,  2},
-    {2,  7,  12, 8,  3},
-    {3,  8,  13, 9,  4},
-    {4,  9,  14, 5,  0},
-    {15, 10, 5,  14, 19},
-    {16, 11, 6,  10, 15},
-    {17, 12, 7,  11, 16},
-    {18, 13, 8,  12, 17},
-    {19, 14, 9,  13, 18},
-    {19, 18, 17, 16, 15}
-};
 
 void init(int argc, char **argv) {
     // create window and menu
@@ -102,11 +59,7 @@ void init(int argc, char **argv) {
 
     glClearColor(0, 0, 0, 0);
     generateColors(colors, surfaceCount);
-    initCamera(camera);
-
-    float zeros[3] = {0.0, 0.0, 0.0};
-    mouse.set(zeros);
-    lastOffset.set(zeros);
+    tracer.init();
 
     // Register callbacks
     glutDisplayFunc (display);
@@ -115,14 +68,6 @@ void init(int argc, char **argv) {
     glutMouseFunc   (mouseFunc);
     glutMotionFunc  (mouseMotion);
     glutIdleFunc    (idle);
-}
-
-void initCamera(Camera &camera) {
-    float position[3]  = { 0.0, 0.0, -10.0 };
-    float direction[3] = { 0.0, 0.0, 0.0 };
-    float rotation[3] = { 0.0, 0.0, 0.0 };
-
-    camera.set(position, direction, rotation);
 }
 
 // aspect, camera.position, camera.rotation, menuEntry
@@ -144,9 +89,7 @@ void display(void) {
     // Model view
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(camera.position.x, camera.position.y, camera.position.z);
-    glRotatef(camera.rotation.x, 1.0f, 0.0f, 0.0f);
-    glRotatef(camera.rotation.y, 0.0f, 1.0f, 0.0f);
+    tracer.transform();
 
     // Lighting
     GLfloat lightpos[4] = { 5.0, 15.0, 10.0, 1.0 };
@@ -185,52 +128,15 @@ void idle(void) {
 
 // menuMode
 void mouseFunc(int button, int state, int x, int y) {
-    // get the mouse buttons and initialize offsets
-    if (button == GLUT_LEFT_BUTTON && !menu.visible) {
-        if (state == GLUT_DOWN) {
-            leftActive = true;
-        } else {
-            leftActive = false;
-        }
-        mouse.x = x;
-        mouse.y = y;
-    } else if (button == GLUT_RIGHT_BUTTON && !menu.visible) {
-        if (state == GLUT_DOWN) {
-            rightActive = true;
-            lastOffset.x = 0.0;
-            lastOffset.y = 0.0;
-        } else {
-            rightActive = false;
-        }
-        mouse.x = x;
-        mouse.y = y;
-    } else if (menu.visible) {
+    if (!menu.visible) {
+        tracer.onMouse(button, state, x, y);
+    } else {
         menu.visible = false;
     }
 }
 
 void mouseMotion(int x, int y) {
-    float xOffset = 0.0, yOffset = 0.0, zOffset = 0.0;
-    if (leftActive) { // rotating
-        camera.rotation.x += (mouse.y - y);
-        camera.rotation.y += (mouse.x - x);
-
-        mouse.y = y;
-        mouse.x = x;
-    } else if (rightActive) { // translating
-        xOffset = (mouse.x + x);
-        if (!fabs(lastOffset.x - 0.0) < 1e-6) {
-            camera.position.x  -= (xOffset - lastOffset.x) / translateFactor;
-            camera.direction.x -= (xOffset - lastOffset.x) / translateFactor;
-        }
-        lastOffset.x = xOffset;
-        yOffset = (mouse.y + y);
-        if (!fabs(lastOffset.y - 0.0) < 1e-6) {
-            camera.position.y  += (yOffset - lastOffset.y) / translateFactor;
-            camera.direction.y += (yOffset - lastOffset.y) / translateFactor;
-        }
-        lastOffset.y = yOffset;
-    }
+    tracer.onMouseMotion(x, y);
 }
 
 void keyboard(unsigned char key, int x, int y) {
