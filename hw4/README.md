@@ -1,5 +1,7 @@
 # Virtual Tracing Ball
 
+![](preview.png)
+
 Zhang Qiuyi, 12330402
 
 ## Dependencies
@@ -9,7 +11,7 @@ Zhang Qiuyi, 12330402
 ## What is it?
 A colorful dodecahedron that can be manipulated(rotated/tranlsated) with the mouse.
 
-![](preview.png).
+
 
 ### Operations
 * Drag with the left button of the mouse to rotate the dodecahedron.
@@ -28,12 +30,19 @@ A colorful dodecahedron that can be manipulated(rotated/tranlsated) with the mou
   - obj  // intermidiate obj files
   - src  // source code
 
-  - freeglut.dll  // dynamic library for prebuilt executable
+  // dynamic library for prebuilt executable
+  - freeglut.dll
+  - libstdc++-6.dll
+  - libgcc_s_dw2-1.dll
+
   - TracingBall.sln   // premaked VS2012 project file
   - main.exe  // prebuilt executable
   - premake5.lua  // premake5 script
-  - preview.png   // preview of this demo
+
+  // preview of this demo
+  - preview.png
   - README.md   // you are reading it :)
+
 ```
 
 ## About the executable
@@ -62,10 +71,10 @@ After installing MinGW and make, go to the root of this project under cmd, and r
 
 If none of the above works, download premake5 from [here](https://premake.github.io/download.html#v5), extract the executable in the archive(e.g. premake5.exe), and put the path to the executable in your `PATH` environment variables. Then open cmd and run `premake5 --help` to see what project files you can generate. I've written a premake script to generate the proper project files.
 
-It should support VS2005 and above. For example, to generate the project files for VS2012, simply run `premake5 vs2012`, then open `hw3.sln` with your VS and build the main target.
+It should support VS2005 and above. For example, to generate the project files for VS2012, simply run `premake5 vs2012`, then open `TracingBall.sln` with your VS and build the main target.
 
 ## About
 
 * Author: Joyee Cheung
 * [Email](mailto://joyeec9h3@gmail.com)
-* [GitHub Repo](https://github.com/joyeecheung/SE-342-Computer-Graphics/tree/master/hw3)
+* [GitHub Repo](https://github.com/joyeecheung/SE-342-Computer-Graphics/tree/master/hw4)
