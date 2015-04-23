@@ -51,13 +51,13 @@ void Tracer::onMouseMotion(int x, int y) {
         mouse.x = x;
     } else if (rightActive) { // translating
         xOffset = (mouse.x + x);
-        if (!fabs(lastOffset.x - 0.0) < 1e-6) {
+        if (fabs(lastOffset.x - 0.0) > 1e-6) {
             camera.position.x  -= (xOffset - lastOffset.x) / translateFactor;
             camera.direction.x -= (xOffset - lastOffset.x) / translateFactor;
         }
         lastOffset.x = xOffset;
         yOffset = (mouse.y + y);
-        if (!fabs(lastOffset.y - 0.0) < 1e-6) {
+        if (fabs(lastOffset.y - 0.0) > 1e-6) {
             camera.position.y  += (yOffset - lastOffset.y) / translateFactor;
             camera.direction.y += (yOffset - lastOffset.y) / translateFactor;
         }

@@ -16,13 +16,21 @@ struct Menu {
     bool visible;
 } menu;
 Tracer tracer;
+Polyhedron dodecahedron;
 GLfloat lightpos[4] = { 5.0, 15.0, 10.0, 1.0 };
-
-
+// enums
+const int SOLID = 1, WIREFRAME = 2;
 
 void init(int argc, char **argv) {
     // create window and menu
     glutInit (&argc, argv);
+    try {
+        dodecahedron.load("data/dodecahedron.off");
+    } catch (const char *msg) {
+        printf(msg);
+        exit(1);
+    }
+
     glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 
     window.create("Virtual Tracing Ball");
@@ -34,7 +42,7 @@ void init(int argc, char **argv) {
     createMenu(GLUT_MIDDLE_BUTTON, entries, SOLID);
 
     glClearColor(0, 0, 0, 0);
-    generateColors(colors, surfaceCount);
+    
     tracer.init();
 
     // Register callbacks
@@ -75,7 +83,7 @@ void onDisplay(void) {
     glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE) ;
 
     // ------------- Drawings --------------
-    draw(menu.entry == SOLID ? GL_POLYGON : GL_LINE_LOOP);
+    dodecahedron.draw(menu.entry == SOLID ? GL_POLYGON : GL_LINE_LOOP);
     // ------------- Drawing ends -----------
 
     glutSwapBuffers();

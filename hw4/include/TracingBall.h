@@ -12,7 +12,7 @@
 
 #include "GLUTWindow.h"
 #include "Tracer.h"
-#include "Dodecahedron.h"
+#include "Polyhedron.h"
 
 // callbacks and functions
 void init(int argc, char **argv);
