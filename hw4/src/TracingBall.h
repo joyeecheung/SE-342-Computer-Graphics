@@ -17,28 +17,15 @@
 // callbacks and functions
 void init(int argc, char **argv);
 
-// ------- Menu -------
-struct Menu {
-    int id;
-    int entry;
-    bool visible;
-};
-extern Menu menu;
+void onDisplay(void);
+void onReshape(int width, int height);
+void onMouse(int button, int state, int x, int y);
+void onMotion(int x, int y);
+void onKeyboard(unsigned char key, int x, int y);
+void onIdle(void);
+
 void createMenu(int button, std::map<std::string, int> entries,
             int defaultEntry);
 void onMenu(int num);
-void menuState(int status);
-// --------------------
-
-void display(void);
-void reshape(int width, int height);
-void idle(void);
-
-void mouseFunc(int button, int state, int x, int y);
-void mouseMotion(int x, int y);
-void keyboard(unsigned char key, int x, int y);
-
-float randomIntensity(void);
-void generateColors(GLfloat colors[][3], int surfaceCount);
-void draw(GLenum type);
+void onMenuState(int status);
 #endif

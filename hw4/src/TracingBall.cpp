@@ -10,38 +10,14 @@
 #include <GL/glut.h>
 
 GLUTWindow window;
-Menu menu;
+struct Menu {
+    int id;
+    int entry;
+    bool visible;
+} menu;
 Tracer tracer;
+GLfloat lightpos[4] = { 5.0, 15.0, 10.0, 1.0 };
 
-void onMenu(int num) {
-    menu.entry = num;
-}
-
-void menuState(int status) {
-    if (status == GLUT_MENU_IN_USE)
-        menu.visible = true;
-}
-
-void createMenu(int button, std::map<std::string, int> entries, int defaultEntry) {
-    menu.visible = false;
-    menu.id = glutCreateMenu(onMenu);
-    menu.entry = defaultEntry;
-    for (std::map<std::string, int>::iterator it = entries.begin();
-        it != entries.end(); ++it) {
-        glutAddMenuEntry(it->first.c_str(), it->second);
-    }
-    glutMenuStateFunc(menuState);
-    glutAttachMenu(button);
-}
-
-// Camera camera;
-// GLfloat translateFactor = 30.0;
-
-// bool leftActive = false;
-// bool middleActive = false;
-// bool rightActive = false;
-// Vector3 mouse;
-// Vector3 lastOffset;
 
 
 void init(int argc, char **argv) {
@@ -62,17 +38,17 @@ void init(int argc, char **argv) {
     tracer.init();
 
     // Register callbacks
-    glutDisplayFunc (display);
-    glutReshapeFunc (reshape);
-    glutKeyboardFunc(keyboard);
-    glutMouseFunc   (mouseFunc);
-    glutMotionFunc  (mouseMotion);
-    glutIdleFunc    (idle);
+    glutDisplayFunc (onDisplay);
+    glutReshapeFunc (onReshape);
+    glutKeyboardFunc(onKeyboard);
+    glutMouseFunc   (onMouse);
+    glutMotionFunc  (onMotion);
+    glutIdleFunc    (onIdle);
 }
 
 // aspect, camera.position, camera.rotation, menuEntry
 // lightpos
-void display(void) {
+void onDisplay(void) {
     // Clear the buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -92,7 +68,6 @@ void display(void) {
     tracer.transform();
 
     // Lighting
-    GLfloat lightpos[4] = { 5.0, 15.0, 10.0, 1.0 };
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
@@ -107,7 +82,7 @@ void display(void) {
 }
 
 // aspect
-void reshape(int w, int h) {
+void onReshape(int w, int h) {
     // resize viewport
     window.update(w, h);
     glViewport(0, 0, w, h);
@@ -122,12 +97,12 @@ void reshape(int w, int h) {
     glLoadIdentity();
 }
 
-void idle(void) {
+void onIdle(void) {
     glutPostRedisplay();
 }
 
 // menuMode
-void mouseFunc(int button, int state, int x, int y) {
+void onMouse(int button, int state, int x, int y) {
     if (!menu.visible) {
         tracer.onMouse(button, state, x, y);
     } else {
@@ -135,11 +110,11 @@ void mouseFunc(int button, int state, int x, int y) {
     }
 }
 
-void mouseMotion(int x, int y) {
+void onMotion(int x, int y) {
     tracer.onMouseMotion(x, y);
 }
 
-void keyboard(unsigned char key, int x, int y) {
+void onKeyboard(unsigned char key, int x, int y) {
     switch (key) {
 #if defined(_WIN32) || defined(WIN32)
     // exit on esc
@@ -154,27 +129,23 @@ void keyboard(unsigned char key, int x, int y) {
     }
 }
 
-float randomIntensity(void) {
-    return (rand() % 256) / 256.0;
+void createMenu(int button, std::map<std::string, int> entries, int defaultEntry) {
+    menu.visible = false;
+    menu.id = glutCreateMenu(onMenu);
+    menu.entry = defaultEntry;
+    for (std::map<std::string, int>::iterator it = entries.begin();
+        it != entries.end(); ++it) {
+        glutAddMenuEntry(it->first.c_str(), it->second);
+    }
+    glutMenuStateFunc(onMenuState);
+    glutAttachMenu(button);
 }
 
-void generateColors(GLfloat colors[][3], int number) {
-    for (int i = 0; i < number; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            colors[i][j] = randomIntensity();
-        }
-    }
+void onMenu(int num) {
+    menu.entry = num;
 }
 
-void draw(GLenum type) {
-    for (int i = 0; i < surfaceCount; ++i) {
-        glBegin(type);
-        glColor3fv(colors[i]);
-
-        for (int j = 0; j < 5; ++j) {
-            int v = indices[i][j];
-            glVertex3fv(vertices[v]);
-        }
-        glEnd();
-    }
+void onMenuState(int status) {
+    if (status == GLUT_MENU_IN_USE)
+        menu.visible = true;
 }

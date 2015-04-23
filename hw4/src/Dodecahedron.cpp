@@ -40,3 +40,28 @@ GLushort indices[surfaceCount][5] = {
     {19, 14, 9,  13, 18},
     {19, 18, 17, 16, 15}
 };
+
+float randomIntensity(void) {
+    return (rand() % 256) / 256.0;
+}
+
+void generateColors(GLfloat colors[][3], int number) {
+    for (int i = 0; i < number; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            colors[i][j] = randomIntensity();
+        }
+    }
+}
+
+void draw(GLenum type) {
+    for (int i = 0; i < surfaceCount; ++i) {
+        glBegin(type);
+        glColor3fv(colors[i]);
+
+        for (int j = 0; j < 5; ++j) {
+            int v = indices[i][j];
+            glVertex3fv(vertices[v]);
+        }
+        glEnd();
+    }
+}

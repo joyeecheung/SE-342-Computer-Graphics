@@ -6,6 +6,7 @@
 #endif
 
 #include <GL/glut.h>
+#include <cstdlib>
 
 // enums
 extern const int SOLID;
@@ -18,4 +19,7 @@ extern GLfloat colors[][3];
 extern GLfloat vertices[][3];
 extern GLushort indices[][5];
 
+float randomIntensity(void);
+void generateColors(GLfloat colors[][3], int surfaceCount);
+void draw(GLenum type);
 #endif
