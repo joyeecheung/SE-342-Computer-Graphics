@@ -58,4 +58,17 @@ OpenGL 程序相当于一个 client，server 则是 OpenGL 的实现（可以跑
   * 帮助解决移植性，主要有 `*int`, `*float`, `*enum` 等
 * 常数 `GL_XXX`, `GLU_XXX`, `GLUT_XXX`
   * 定义位于 glcorearb.h 和 glext.h
-*
+
+
+## 一个图形系统应当提供的函数类别
+* primitive
+  * points, lines, polygons, pixels, ...
+* attribute
+  * color, pattern, typefaces, ...
+* viewing
+  * OpenGL doesn't provide them, need to use shaders or GLU, etc.
+* transformation
+  * rotation, translation, scaling
+* input
+* control
+* query
